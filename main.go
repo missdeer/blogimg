@@ -98,5 +98,8 @@ func main() {
 	r.GET("/:post", handleImageRequestForPost)
 	r.DELETE("/:post", handleDeleteCachedPostImage)
 	r.POST("/clearall", handleClearAllCachedPostImage)
+	r.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusFound, "https://minidump.info/blog/")
+	})
 	log.Fatal(r.Run(bindAddr))
 }
