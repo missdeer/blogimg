@@ -10,6 +10,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 
@@ -87,6 +88,29 @@ func handleClearAllCachedPostImage(c *gin.Context) {
 	})
 }
 
+func handleUpdatePostImage(c *gin.Context) {
+	post := c.Query("post")
+	img := c.Query("img")
+	_, err := url.Parse(img)
+	if post == "" || err != nil {
+		errMsg := "invalid post name or image URL"
+		if err != nil {
+			errMsg = err.Error()
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"result":  "error",
+			"message": errMsg,
+		})
+		return
+	}
+
+	cache.Put(post, img)
+
+	c.JSON(http.StatusOK, gin.H{
+		"result": "OK",
+	})
+}
+
 func main() {
 	cache = RedisInit()
 	rand.Seed(time.Now().Unix())
@@ -98,6 +122,7 @@ func main() {
 	r.GET("/:post", handleImageRequestForPost)
 	r.DELETE("/:post", handleDeleteCachedPostImage)
 	r.POST("/clearall", handleClearAllCachedPostImage)
+	r.POST("/update", handleUpdatePostImage)
 	r.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusFound, "https://minidump.info/blog/")
 	})
