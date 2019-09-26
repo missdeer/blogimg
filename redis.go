@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
 var (
@@ -46,6 +46,20 @@ func (rc *RedisCache) do(commandName string, args ...interface{}) (reply interfa
 	defer c.Close()
 
 	return c.Do(commandName, args...)
+}
+
+func (rc *RedisCache) SetSet(key string, values ...interface{}) (interface{}, error) {
+	args := []interface{}{key}
+	args = append(args, values...)
+	i, err := rc.do("SADD", args...)
+	if err != nil {
+		return i, err
+	}
+	return rc.do("EXPIRE", key, 86400)
+}
+
+func (rc *RedisCache) RandSetMember(key string) (interface{}, error) {
+	return rc.do("SRANDMEMBER", key)
 }
 
 // Get cache from redis.

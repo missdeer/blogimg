@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
 func readFromRedis(post string) (string, error) {
