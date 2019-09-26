@@ -1,0 +1,62 @@
+language: go
+go:
+  - tip
+  
+script:
+  - env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w"  && tar czvf blogimg-linux-amd64.tar.gz blogimg
+  - env GOARCH=386 GOOS=linux go build -ldflags="-s -w"  && tar czvf blogimg-linux-x86.tar.gz blogimg
+  - env GOARCH=arm GOARM=5 GOOS=linux go build -ldflags="-s -w"  && tar czvf blogimg-linux-armv5.tar.gz blogimg
+  - env GOARCH=arm GOARM=6 GOOS=linux go build -ldflags="-s -w"  && tar czvf blogimg-linux-armv6.tar.gz blogimg
+  - env GOARCH=arm GOARM=7 GOOS=linux go build -ldflags="-s -w"  && tar czvf blogimg-linux-armv7.tar.gz blogimg
+  - env GOARCH=arm64 GOOS=linux go build -ldflags="-s -w"  && tar czvf blogimg-linux-arm64.tar.gz blogimg
+  - env GOARCH=ppc64 GOOS=linux go build -ldflags="-s -w"  && tar czvf blogimg-linux-ppc64.tar.gz blogimg
+  - env GOARCH=ppc64le GOOS=linux go build -ldflags="-s -w"  && tar czvf blogimg-linux-ppc64le.tar.gz blogimg
+  - env GOARCH=mips64 GOOS=linux go build -ldflags="-s -w"  && tar czvf blogimg-linux-mips64.tar.gz blogimg
+  - env GOARCH=mips64le GOOS=linux go build -ldflags="-s -w"  && tar czvf blogimg-linux-mips64le.tar.gz blogimg
+  - env GOARCH=amd64 GOOS=darwin go build -ldflags="-s -w"  && tar czvf blogimg-darwin-amd64.tar.gz blogimg
+  - env GOARCH=amd64 GOOS=windows go build  && tar czvf blogimg-windows-amd64.tar.gz blogimg.exe
+  - env GOARCH=386 GOOS=windows go build  && tar czvf blogimg-windows-x86.tar.gz blogimg.exe
+  - env GOARCH=amd64 GOOS=freebsd go build -ldflags="-s -w"  && tar czvf blogimg-freebsd-amd64.tar.gz blogimg
+  - env GOARCH=386 GOOS=freebsd go build -ldflags="-s -w"  && tar czvf blogimg-freebsd-x86.tar.gz blogimg
+  - env GOARCH=arm GOOS=freebsd go build -ldflags="-s -w"  && tar czvf blogimg-freebsd-arm.tar.gz blogimg
+  - env GOARCH=amd64 GOOS=openbsd go build -ldflags="-s -w"  && tar czvf blogimg-openbsd-amd64.tar.gz blogimg
+  - env GOARCH=386 GOOS=openbsd go build -ldflags="-s -w"  && tar czvf blogimg-openbsd-x86.tar.gz blogimg
+  - env GOARCH=amd64 GOOS=netbsd go build -ldflags="-s -w"  && tar czvf blogimg-netbsd-amd64.tar.gz blogimg
+  - env GOARCH=386 GOOS=netbsd go build -ldflags="-s -w"  && tar czvf blogimg-netbsd-x86.tar.gz blogimg
+  - env GOARCH=arm GOOS=netbsd go build -ldflags="-s -w"  && tar czvf blogimg-netbsd-arm.tar.gz blogimg
+  - env GOARCH=amd64 GOOS=dragonfly go build -ldflags="-s -w"  && tar czvf blogimg-dragonflybsd-amd64.tar.gz blogimg
+  - env GOARCH=amd64 GOOS=solaris go build -ldflags="-s -w"  && tar czvf blogimg-solaris-amd64.tar.gz blogimg
+env:
+  global:
+  - GITHUB_REPO: missdeer/blogimg
+  - GIT_NAME: missdeer
+  - GIT_EMAIL: missdeer@dfordsoft.com
+deploy:
+  provider: releases
+  file: 
+    - blogimg-darwin-amd64.tar.gz           
+    - blogimg-dragonflybsd-amd64.tar.gz     
+    - blogimg-freebsd-amd64.tar.gz          
+    - blogimg-freebsd-arm.tar.gz            
+    - blogimg-freebsd-x86.tar.gz            
+    - blogimg-linux-amd64.tar.gz            
+    - blogimg-linux-arm64.tar.gz            
+    - blogimg-linux-armv6.tar.gz            
+    - blogimg-linux-armv7.tar.gz            
+    - blogimg-linux-mips64.tar.gz           
+    - blogimg-linux-mips64le.tar.gz         
+    - blogimg-linux-ppc64.tar.gz            
+    - blogimg-linux-ppc64le.tar.gz          
+    - blogimg-linux-x86.tar.gz              
+    - blogimg-netbsd-amd64.tar.gz           
+    - blogimg-netbsd-arm.tar.gz             
+    - blogimg-netbsd-x86.tar.gz             
+    - blogimg-openbsd-amd64.tar.gz          
+    - blogimg-openbsd-x86.tar.gz            
+    - blogimg-solaris-amd64.tar.gz                
+    - blogimg-windows-amd64.tar.gz              
+    - blogimg-windows-x86.tar.gz                
+  on:
+    repo: missdeer/blogimg
+    tags: true
+  skip_cleanup: true
