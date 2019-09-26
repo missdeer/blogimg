@@ -53,7 +53,7 @@ func extractFromPostContent(post string) (string, error) {
 			return
 		}
 		imgURL, ok := s.Attr("src")
-		if ok {
+		if ok && imgURL != defaultImage {
 			if strings.HasSuffix(imgURL, ".svg") == false {
 				// png gif jpg
 				// get imgURL

@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	peapixURLTemplate     = `https://peapix.com/bing?year=%s`
-	peapixPageURLTemplate = `https://peapix.com/bing?year=%s&page=%d`
+	peapixURLTemplate     = `https://peapix.com/bing?year=%d`
+	peapixPageURLTemplate = `https://peapix.com/bing?year=%d&page=%d`
 	peapixPattern         = `^https:\/\/img\.peapix\.com\/[0-9a-z]+_[0-9]{3}\.jpg$`
 )
 
@@ -50,7 +50,16 @@ func pickFromBingWallpaper(post string) (string, error) {
 		return "", errors.New("unexpected parameter")
 	}
 
-	peapixURL := fmt.Sprintf(peapixURLTemplate, ss[0][1])
+	year, err := strconv.Atoi(ss[0][1])
+	if err != nil {
+		log.Println(err)
+		year = 2017
+	}
+	if year < 2011 {
+		years := []int{2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019}
+		year = years[rand.Intn(len(years))]
+	}
+	peapixURL := fmt.Sprintf(peapixURLTemplate, year)
 
 	if cache.IsExist(peapixURL) {
 		imgURL, err := redis.String(cache.RandSetMember(peapixURL))
@@ -85,7 +94,7 @@ func pickFromBingWallpaper(post string) (string, error) {
 	res := extractImageURLs(doc)
 
 	for i := maxPage; i > 1; i-- {
-		u := fmt.Sprintf(peapixPageURLTemplate, ss[0][1], i)
+		u := fmt.Sprintf(peapixPageURLTemplate, year, i)
 		resp, err := http.Get(u)
 		if err != nil {
 			continue
