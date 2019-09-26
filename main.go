@@ -119,12 +119,18 @@ func main() {
 		bindAddr = "127.0.0.1:8585"
 	}
 	r := gin.Default()
-	r.GET("/:post", handleImageRequestForPost)
-	r.DELETE("/:post", handleDeleteCachedPostImage)
-	r.POST("/clearall", handleClearAllCachedPostImage)
-	r.POST("/update", handleUpdatePostImage)
 	r.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusFound, "https://minidump.info/blog/")
 	})
+	r.GET("/:post", handleImageRequestForPost)
+
+	user := os.Getenv("USER")
+	passwd := os.Getenv("PASSWD")
+	authorized := r.Group("/admin", gin.BasicAuth(gin.Accounts{
+		user: passwd,
+	}))
+	authorized.DELETE("/:post", handleDeleteCachedPostImage)
+	authorized.POST("/clearall", handleClearAllCachedPostImage)
+	authorized.POST("/update", handleUpdatePostImage)
 	log.Fatal(r.Run(bindAddr))
 }
