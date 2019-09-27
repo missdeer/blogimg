@@ -125,7 +125,13 @@ func main() {
 	r.GET("/:post", handleImageRequestForPost)
 
 	user := os.Getenv("USER")
+	if user == "" {
+		log.Fatal("environment variable USER is required")
+	}
 	passwd := os.Getenv("PASSWD")
+	if passwd == "" {
+		log.Fatal("environment variable PASSWD is required")
+	}
 	authorized := r.Group("/admin", gin.BasicAuth(gin.Accounts{
 		user: passwd,
 	}))
