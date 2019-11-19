@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	peapixURLTemplate     = `https://peapix.com/bing?year=%d`
-	peapixPageURLTemplate = `https://peapix.com/bing?year=%d&page=%d`
+	peapixURLTemplate     = `https://peapix.com/bing/cn/%d`
+	peapixPageURLTemplate = `https://peapix.com/bing/cn/%d?page=%d`
 	peapixPattern         = `^https:\/\/img\.peapix\.com\/[0-9a-z]+_[0-9]{3}\.jpg$`
 )
 
