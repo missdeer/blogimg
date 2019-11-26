@@ -44,7 +44,7 @@ func extractImageURLs(doc *goquery.Document) (res []string) {
 // if there's no records in redis, extract all image URLs from peapix
 // save all URLs into redis for 24 hours
 // randomly select an image from the set and return
-func pickFromBingWallpaper(post string) (string, error) {
+func pickFromBingWallpaper(post string, enableCache bool) (string, error) {
 	ss := regexPost.FindAllStringSubmatch(post, -1)
 	if len(ss) == 0 || len(ss[0]) != 6 {
 		return "", errors.New("unexpected parameter")
@@ -61,7 +61,7 @@ func pickFromBingWallpaper(post string) (string, error) {
 	}
 	peapixURL := fmt.Sprintf(peapixURLTemplate, year)
 
-	if cache.IsExist(peapixURL) {
+	if enableCache && cache.IsExist(peapixURL) {
 		imgURL, err := redis.String(cache.RandSetMember(peapixURL))
 		if err == nil {
 			return imgURL, nil
@@ -114,8 +114,10 @@ func pickFromBingWallpaper(post string) (string, error) {
 		for i, v := range res {
 			s[i] = v
 		}
-		if _, err = cache.SetSet(peapixURL, s...); err != nil {
-			log.Println(err)
+		if enableCache {
+			if _, err = cache.SetSet(peapixURL, s...); err != nil {
+				log.Println(err)
+			}
 		}
 		return res[rand.Intn(count)], nil
 	}

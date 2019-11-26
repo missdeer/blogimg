@@ -48,7 +48,7 @@ func handleImageRequestForPost(c *gin.Context) {
 	}
 	log.Println(err)
 
-	result, err = pickFromBingWallpaper(post)
+	result, err = pickFromBingWallpaper(post, true)
 	if err == nil {
 		c.Redirect(http.StatusFound, result)
 		cache.Put(post, result)
