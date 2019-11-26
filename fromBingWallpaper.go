@@ -25,8 +25,8 @@ var (
 )
 
 func extractImageURLs(doc *goquery.Document) (res []string) {
-	doc.Find(".img-fluid").Each(func(i int, s *goquery.Selection) {
-		imgURL, ok := s.Attr("src")
+	doc.Find(".image-list__picture").Each(func(i int, s *goquery.Selection) {
+		imgURL, ok := s.Attr("data-bgset")
 		if ok {
 			if regexPeapix.MatchString(imgURL) {
 				// use this one
