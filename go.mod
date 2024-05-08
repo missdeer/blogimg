@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/PuerkitoBio/goquery v1.9.2
-	github.com/gin-gonic/gin v1.9.1
+	github.com/gin-gonic/gin v1.10.0
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
